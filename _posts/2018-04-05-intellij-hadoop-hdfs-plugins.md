@@ -101,4 +101,3 @@ B、NodeManager
 5. 当所有的 task 都执行完了,ApplicationMaster会将结果反馈给客户端,所有工作执行完成之后,ApplicationMaster 就会自行关闭。
 
 6. 如果某个 map 任务或者 reduce 任务失败,ApplicationMaster会重新申请新的 container 来执行这个task。
----------------------
