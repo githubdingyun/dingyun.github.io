@@ -52,7 +52,9 @@ author: dingyun
 
 * 　　2.3 对reduce输出的<k,v>写到HDFS中。
 ## wordcount 结果
+
 ```java
+
 package org.dingyun.hadoop;
 
 import org.apache.hadoop.conf.Configuration;
@@ -139,5 +141,4 @@ public class MRWordCount {
 ### FileOutputFormat
 ### Configration
 ### Job
-###
 ## 自我理解:

@@ -31,25 +31,25 @@ SequenceFile.createWriter()；
 
 三种不同的压缩方式是共用一个数据头，流方式的读取会先读取头字节去判断是哪种方式的压缩，然后根据压缩方式去解压缩并反序列化字节流数据，得到可识别的数据。
 
-    ### 流的存储头字节格式：
-    #### Header：
-    * 字节头”SEQ”, 后跟一个字节表示版本”SEQ4”,”SEQ6”.//这里有点忘了 不记得是怎么处理的了，回头补上做详细解释
-    * keyClass name
-    * valueClass name
-    * compression boolean型的存储标示压缩值是否转变为keys/values值了
-    * blockcompression boolean型的存储标示是否全压缩的方式转变为keys/values值了
-    * compressor 压缩处理的类型，比如我用Gzip压缩的Hadoop提供的是GzipCodec什么的..
-    * 元数据 这个大家可看可不看的
+### 流的存储头字节格式：
+#### Header：
+* 字节头”SEQ”, 后跟一个字节表示版本”SEQ4”,”SEQ6”.//这里有点忘了 不记得是怎么处理的了，回头补上做详细解释
+* keyClass name
+* valueClass name
+* compression boolean型的存储标示压缩值是否转变为keys/values值了
+* blockcompression boolean型的存储标示是否全压缩的方式转变为keys/values值了
+* compressor 压缩处理的类型，比如我用Gzip压缩的Hadoop提供的是GzipCodec什么的..
+* 元数据 这个大家可看可不看的
 
 >所有的String类型的写操作被封装为Hadoop的IO API，Text类型writeString()搞定。
 
 ### 未压缩的和只压缩values值的方式的字节流头部是类似的：
-*Header
-*RecordLength记录长度
-*key Length key值长度
-*key 值
-*是否压缩标志 boolean
-*values
+* Header
+* RecordLength记录长度
+* key Length key值长度
+* key 值
+* 是否压缩标志 boolean
+* values
 
 
 ### sequenceFile 文件存储有三种方式：
