@@ -11,7 +11,7 @@ author: dingyun
 
 * content
 {:toc}
-## vim:神一样的编辑器
+## vim:神一样的编辑器 ~[如何使用插件](https://blog.csdn.net/qqstring/article/details/81511174)
 > Vim是一个类似于Vi的著名的功能强大、高度可定制的文本编辑器，在Vi的基础上改进和增加了很多特性。 [1]  VIM是自由软件。
 >
 >Vim普遍被推崇为类Vi编辑器中最好的一个，事实上真正的劲敌来自Emacs的不同变体。1999 年Emacs被选为Linuxworld文本编辑分类的优胜者，Vim屈居第二。但在2000年2月Vim赢得了Slashdot Beanie的最佳开放源代码文本编辑器大奖，
