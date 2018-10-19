@@ -1,3 +1,16 @@
+---
+layout: post
+title:  "hadoop-install"
+date:   2018-01-15 15:14:54
+categories: linux
+tags:  hadoop linux
+mathjax: true
+author: dingyun
+---
+
+* content
+{:toc}
+
 #1. 集群规划
 ```
    | 集群节点分配 |

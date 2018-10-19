@@ -1,12 +1,16 @@
 ---
 layout: post
-title:  "hadoop-hdfs-filesystem"
-date:   2018-02-06 15:14:54
+title:  "linux-install-ready"
+date:   2018-02-01 15:14:54
 categories: linux
 tags:  hadoop linux network
 mathjax: true
 author: dingyun
 ---
+
+* content
+{:toc}
+
 #### 安装虚拟机
 >最小化安装以及后的磁盘挂载
 

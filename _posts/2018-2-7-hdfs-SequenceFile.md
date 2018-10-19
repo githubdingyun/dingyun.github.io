@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "HDFS's sequenceFile"
-date:   2018-2-7 15:14:54
+date:   2018-02-07 15:14:54
 categories: hadoop
 tags: hadoop hdfs
 excerpt: Hadoop 处理小文件的方法:sequenceFile
@@ -179,4 +179,3 @@ public class SequenceFileTest {
 
 ```
 ##### 下一节则是mapreduce经典程序 `wordcount` 的演示
-

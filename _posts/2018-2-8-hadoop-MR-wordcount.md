@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "MapReduce原理和初体验"
-date:   2018-02-8 13:14:24
+date:   2018-02-08 13:14:24
 categories: hadoop
 tags: MR hadoop
 excerpt:
