@@ -11,7 +11,8 @@ author: dingyun
 * content
 {:toc}
 
-#1. 集群规划
+# 1. 集群规划
+
 ```
    | 集群节点分配 |
    | 主机名	| 主机IP |
@@ -31,6 +32,7 @@ author: dingyun
     Hive	/opt/SoftWare/Hive
     MySQL	/opt/SoftWare/MySQL
 ```
+
 ## 按照安装linux步骤
 [安装步骤](https://githubdingyun.github.io/2018/02/01/hadoop-hdfs-filesystemo/)
 - 布置好虚拟机
@@ -41,10 +43,12 @@ author: dingyun
 
 ### 安装Hadoop
 #### 卸载java
+
 ```sh
 rpm -qa | grep jdk
 rpm -e
 ```
+
 #### 安装jdk
 ```sh
 tar -zxvf 安装包
@@ -80,7 +84,7 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 - 一个dns解析
 >    `/etc/hosts` 文件配置域名解析
 
-  ```
+```
   127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4                                                                         
   ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
   192.168.101.3 master1
@@ -88,7 +92,7 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
   192.168.101.5 node2
   192.168.101.6 node3
 
-  ```
+```
 - 两个环境变量文件
 >hadoop-env.sh    
 >
@@ -98,7 +102,7 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 - 4个必要配置
   - yarn-site.xml
 
-  ```
+```
 <configuration>
         <property>
                 <name>yarn.nodemanager.aux-services</name>
@@ -130,11 +134,11 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
         </property>
 </configuration>
 
-  ```
+```
 
   - core-site.xml
 
-  ```
+```
   <configuration>
         <property>
                 <name>fs.defaultFS</name>
@@ -157,11 +161,11 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                 <value>*</value>
         </property>
 </configuration>
-  ```
+```
 
   - map-site-xml (此文件没有,请复制其模板类创建)
 
-  ```
+```
   <configuration>
         <property>
                 <name>mapreduce.framework.name</name>
@@ -176,11 +180,11 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                 <value>master1:19888</value>
         </property>
 </configuration>
-  ```
+```
 
   - hdfs-site-xml
 
-  ```
+```
 <configuration>
         <property>
                 <name>dfs.namenode.secondary.http-address</name>
@@ -211,7 +215,7 @@ export PATH=$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
                 <value> supergroup</value>
         </property>
 </configuration>
-  ```
+```
 
 
 ### 启动集群
