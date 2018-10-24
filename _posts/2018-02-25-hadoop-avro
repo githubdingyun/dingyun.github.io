@@ -1,3 +1,18 @@
+---
+layout: post
+title:  "avro在大数据中的使用"
+date:   2018-02-08 13:14:24
+categories: hadoop
+tags: MR hadoop avro
+excerpt:
+mathjax: true
+author: dingyun
+---
+
+* content
+{:toc}
+
+
 # 什么是avro
 ## 优点
 ### 多语言支持对接
@@ -189,10 +204,301 @@ The 'data' file is an ordinary Avro container file with records. Each record has
        writer.close();
    }
 ```
-
-
-#### AvroSequenceFile 使用实例
+#### 使用record这种类型代替单一的keyvalue字段序列化(把文件字段改为bytes[])
 
 ```java
+/**
+   * 使用avro来序列化文件  文件保存为bytes字段  其他字段为  String String
+   * 用于替代sequencefile 的keyvalue格式
+   *
+   * @throws IOException
+   */
+  @Test
+  public void SmallFileMerag() throws IOException {
+      File file = new File("D:\\Desktop_dingyun\\大数据svn同步wc\\onclass\\hadoop\\reindexfiles");
+      File[] files = file.listFiles();
+
+      DatumWriter<MergedFile> mergedFileDatumWriter = new SpecificDatumWriter<MergedFile>(MergedFile.class);
+      DataFileWriter<MergedFile> mergedFileDataFileWriter = new DataFileWriter<MergedFile>(mergedFileDatumWriter);
+      DataFileWriter<MergedFile> writer = mergedFileDataFileWriter.
+              create(MergedFile.getClassSchema(), new File("mergedFile.avro"));
+      MergedFile mergedFile = new MergedFile();
+      for (File f :
+              files) {
+          mergedFile.setFilename(f.getPath());
+          FileInputStream fileInputStream = new FileInputStream(f);
+          byte[] bytes = new byte[(int) f.length()];
+          fileInputStream.read(bytes);
+          mergedFile.setMd5(DigestUtils.md5Hex(bytes));
+          mergedFile.setContent(ByteBuffer.wrap(bytes));
+          writer.append(mergedFile);
+      }
+      writer.flush();
+      writer.close();
+
+
+  }
+
+```
+#### 反序列化meragefile
+
+```java
+/**
+     * merged file反序列化
+     * 读取被avro序列化的record格式的字段
+     */
+    @Test
+    public void readMeargTOFile() throws IOException {
+
+        DatumReader<MergedFile> mergedFileDatumReader = new SpecificDatumReader<MergedFile>(MergedFile.class);
+        DataFileReader<MergedFile> dataFileReader =
+                new DataFileReader<MergedFile>(new File("mergedFile.avro"), mergedFileDatumReader);
+        MergedFile mergedFile = null;
+        while (dataFileReader.hasNext()) {
+            // Reuse mergedFile object by passing it to next(). This saves us from
+            // allocating and garbage collecting many objects for files with
+            // many items.
+
+            mergedFile = dataFileReader.next(mergedFile);
+            System.out.println(mergedFile.toString());
+        }
+
+
+    }
+```
+
+### avro在hadoop上的使用(比单一的sequence文件好用,因为文本类型丰富)
+#### map段 使用实例
+
+```java
+package com.zhiyou.bd23.avroMR;
+
+import com.zhiyou.bd23.avroschema.MergedFile;
+import org.apache.avro.mapred.AvroKey;
+import org.apache.avro.mapreduce.AvroJob;
+import org.apache.avro.mapreduce.AvroKeyInputFormat;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobID;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
+
+/**
+ * @program: avrotest
+ * @description: 使用avro来调用mr
+ * @author: dingyun
+ * @create: 2018-10-24 15:51
+ */
+public class AvroMRTest {
+
+    public static class AvroMRTestMap extends Mapper<AvroKey<MergedFile>, NullWritable, Text, IntWritable> {
+        private String text;
+        private Text outputkey = new Text();
+        private IntWritable outputvalue = new IntWritable(1);
+
+        @Override
+        protected void map(AvroKey<MergedFile> key, NullWritable value, Context context) throws IOException, InterruptedException {
+            byte[] array = key.datum().getContent().array();
+            text = new String(array, "utf-8");
+            String[] strings = text.toString().split("[\\s\\,.]");
+            for (String s : strings
+                    ) {
+                outputkey.set(s);
+                context.write(outputkey, outputvalue);
+
+            }
+
+
+        }
+    }
+
+    public static class AvroMRTestRe extends Reducer<Text, IntWritable, Text, IntWritable> {
+        private int sum;
+        private IntWritable outputvalue = new IntWritable();
+        private Text ouputkey = new Text();
+
+        @Override
+        protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+            sum = 0;
+            for (IntWritable value : values
+                    ) {
+                sum++;
+            }
+            ouputkey.set(key);
+            outputvalue.set(sum);
+            context.write(ouputkey, outputvalue);
+
+        }
+    }
+
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+
+        Configuration configuration = new Configuration();
+        configuration.set("fs.defaultFS", "hdfs://master1:9000");
+        Job job = Job.getInstance(configuration);
+
+        job.setJarByClass(AvroMRTest.class);
+
+//        FileInputFormat.addInputPath(job, new Path("/avro/mergedFile.avro"));
+        AvroJob.setInputKeySchema(job, MergedFile.getClassSchema());
+        job.setInputFormatClass(AvroKeyInputFormat.class);
+        AvroKeyInputFormat.setInputPaths(job, new Path("/avro/mergedFile.avro"));
+        job.setJobName("avro");
+        job.setJobID(new JobID());
+
+
+        //mapper阶段
+        job.setMapperClass(AvroMRTestMap.class);
+
+        //redurce阶段
+        //1.设置类型
+        job.setReducerClass(AvroMRTestRe.class);
+        //设置输出
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        //3.文件输出阶段,如果有路径就删除路径!!!
+        Path outputpath = new Path("/avro/MRTest");
+        outputpath.getFileSystem(configuration).delete(outputpath, true);
+        FileOutputFormat.setOutputPath(job, outputpath);
+
+
+        //启动job
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+
+    }
+
+}
+```
+
+#### Reducer输出格式为 avrokeyoutputformat<>
+
+```java
+package com.zhiyou.bd23.avroMR;
+
+import com.zhiyou.bd23.avroschema.MergedFile;
+import com.zhiyou.bd23.avroschema.Subject;
+import org.apache.avro.mapred.AvroKey;
+import org.apache.avro.mapreduce.AvroJob;
+import org.apache.avro.mapreduce.AvroKeyInputFormat;
+import org.apache.avro.mapreduce.AvroKeyOutputFormat;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.JobID;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+import java.io.IOException;
+
+/**
+ * @program: avrotest
+ * @description: 统计平均分, 输出为avro文件格式
+ * @author: dingyun
+ * @create: 2018-10-24 17:08
+ */
+public class AvroReduce {
+
+
+    public static class AvroReduceMap extends Mapper<LongWritable, Text, Text, Text> {
+        private Text ouyputkey = new Text();
+        private Text outputvalue = new Text();
+
+        @Override
+        protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+
+            String[] split = value.toString().split("[\\s\\.,\"]");
+            String[] forage = split[2].split("/");
+            int sex = 2018 - Integer.valueOf(forage[0]);
+            ouyputkey.set(split[5]);
+            outputvalue.set(value.toString());
+            context.write(ouyputkey, outputvalue);
+
+
+        }
+    }
+
+
+    public static class AvroReduceRe extends Reducer<Text, Text, AvroKey<Subject>, NullWritable> {
+        private double sum = 0;
+        private int num = 0;
+        private boolean flag;
+        private Subject outputkey = new Subject();
+        private NullWritable outputvalue = NullWritable.get();
+
+        @Override
+        protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+
+
+            sum = 0;
+            num = 0;
+            for (Text value :
+                    values) {
+                String[] split = value.toString().split("[\\s\\.,\"]");
+                sum += Double.valueOf(split[4]);
+                num++;
+            }
+            outputkey.setAllScore(sum);
+            sum /= num;
+            outputkey.setCourse(key.toString());
+            outputkey.setStudentNumber(num);
+            outputkey.setTheAverageScore(sum);
+
+            context.write(new AvroKey<Subject>(outputkey), outputvalue);
+        }
+    }
+
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+        Configuration configuration = new Configuration();
+        configuration.set("fs.defaultFS", "hdfs://master1:9000");
+        Job job = Job.getInstance(configuration);
+
+        job.setJarByClass(AvroReduce.class);
+
+        FileInputFormat.addInputPath(job, new Path("/sort2/stuMessage"));
+        job.setJobName("avroreduce to avro");
+        job.setJobID(new JobID());
+
+
+        //mapper阶段
+        job.setMapperClass(AvroReduceMap.class);
+
+        //redurce阶段
+        //1.设置类型
+        job.setReducerClass(AvroReduceRe.class);
+        //设置输出
+        AvroJob.setOutputKeySchema(job, Subject.getClassSchema());
+
+        job.setOutputKeyClass(Subject.class);
+        job.setOutputValueClass(NullWritable.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(Text.class);
+        //3.文件输出阶段,如果有路径就删除路径!!!
+        job.setOutputFormatClass(AvroKeyOutputFormat.class);
+        Path outputpath = new Path("/avro/reduceResult.avro");
+        outputpath.getFileSystem(configuration).delete(outputpath, true);
+        AvroKeyOutputFormat.setOutputPath(job, outputpath);
+
+
+        //启动job
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+    }
+
+
+}
 
 ```
