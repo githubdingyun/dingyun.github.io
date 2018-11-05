@@ -1,0 +1,28 @@
+
+hadoop版本:
+apache
+cdh:          cdh版本的一体化管理工具  cloudera
+hortonworks:ambari    版本
+星环Hadoop版本tdh
+华为hadoop版本
+
+这些版本是他们fork了原hadoop的代码再加做修改,然后做集成优化
+注意着一些是直接使用的,api,sql命令等等  不需要重新学习
+
+sql引擎:
+hive       注意是基础,下面可以用hive的原数据库  matestore
+impala     是cdh的sql查询   查询速度要比hive快
+sparksql    spark下的sql   是spaek引擎
+persto    --------   teradata 天睿公司(开源免费)数据仓库 不是mapreduce引擎
+
+程序设计重要概念:
+### 命名空间
+解决命名冲突,实现数据隔离
+
+
+数据库远程访问
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'bigdata123/' WITH GRANT OPTION;
+flush privileges;
+hive编码变长
+alter database hive character set latin1;
