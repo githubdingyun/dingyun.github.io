@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  '利用Clonezilla备份还原Linux系统'
-date:   2018-02-05 15:14:54
+date:   2018-02-03 10:12:54
 categories: linux
 tags:  Clonezilla linux
 mathjax: true
