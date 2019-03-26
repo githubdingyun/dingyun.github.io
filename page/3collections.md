@@ -292,4 +292,8 @@ Syntax Theme: Atom Dark or One Dark
 
 ## Comments
 
+
+<script src="{{ " /js/masonry.pkgd.min.js " | prepend: site.baseurl }}" charset="utf-8"></script>
+<script src="{{ " /js/waterfall.js " | prepend: site.baseurl }}" charset="utf-8"></script>
+
 {% include comments.html %}
