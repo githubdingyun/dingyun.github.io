@@ -9,8 +9,16 @@
             el: '#vcomments',
             appId: 'DYwJyYOzV2XaOmycqeFnmGca-gzGzoHsz',
             appKey: 'VtOPOa1OFWDOP1P2xYW82SvE',
-            // avatar:'' // (''/mp/identicon/monsterid/wavatar/robohash/retro/hide)
+            // avatar:'' // (''/mp/identicon/monsterid/wavatar/robohash/retro/hide)  头像展示方式
             avatar:'robohash',
-             visitor: true // 阅读量统计
+            placeholder: '是兄dei,就说点什么吧~~~~',
+            notify:false, //评论回复邮件提醒，请参考配置。
+            verify:false, //验证码服务
+            path: 'window.location.pathname',   //I. 请保证每个文章页路径的唯一性，否则可能会出现不同文章页下加载相同评论列表的情况。
+                                            //II. 如果值为window.location.href，可能会出现随便加不同参数进入该页面，而被判断成新页面的情况。
+            visitor: true, // 阅读量统计
+            pageSize:10,
+            lang:'zh-cn',
+            highlight:true
         })
     </script>
