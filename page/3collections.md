@@ -291,7 +291,5 @@ Syntax Theme: Atom Dark or One Dark
 
     首页的卡片翻动效果非常赞。
 
-## Comments
----
-
-> {% include comments.html %}
+    <h2 id="comments">Comments</h2>
+    {% include comments.html %}
