@@ -4,6 +4,7 @@ title: Collections
 permalink: /collection/
 icon: bookmark
 type: page
+mathjax: true
 ---
 
 * content
@@ -291,9 +292,5 @@ Syntax Theme: Atom Dark or One Dark
     首页的卡片翻动效果非常赞。
 
 ## Comments
-
-
-<script src="{{ " /js/masonry.pkgd.min.js " | prepend: site.baseurl }}" charset="utf-8"></script>
-<script src="{{ " /js/waterfall.js " | prepend: site.baseurl }}" charset="utf-8"></script>
 
 {% include comments.html %}
