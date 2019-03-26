@@ -28,9 +28,9 @@ description_footer: 来自李帅国的个人专栏！
 # comments
 # two ways to comment, only choose one, and use your own short name
 # 两种评论插件，选一个就好了，使用自己的 short_name
-duoshuo_shortname: githubdingyun
+# duoshuo_shortname: githubdingyun
 #disqus_shortname: githubdingyun
-#gitalk:
+# gitalk:
 #  enable: true    #是否开启Gitalk评论
 #  clientID: 52bbb620d9680fd85254                          #生成的clientID
 #  clientSecret: d92cec378527800b0816d1bdd26dc71eb5dd0ccd    #生成的clientSecret
@@ -44,15 +44,15 @@ duoshuo_shortname: githubdingyun
 # 百度统计 id，将统计代码替换为自己的百度统计id，即
 # hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxx";
 # xxxxx字符串
-baidu_tongji_id: 3db5df747b7bbf1f8e98961c4e9ada1a
+# baidu_tongji_id: 3db5df747b7bbf1f8e98961c4e9ada1a
 #google_analytics_id: UA-72449510-4 # google 分析追踪id
 
-#friends: [
-#    {
-#        title: "Linkedin - Xin YAO",
-#        href: "https://www.linkedin.com/in/%E4%BF%A1-%E5%A7%9A-947492167/"
-#    }
-#]
+friends: [
+   {
+       title: "Linkedin - Xin YAO",
+       href: "https://www.linkedin.com/in/%E4%BF%A1-%E5%A7%9A-947492167/"
+   }
+]
 
 
 # Build settings
