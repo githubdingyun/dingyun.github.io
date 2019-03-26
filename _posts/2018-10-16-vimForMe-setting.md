@@ -11,6 +11,8 @@ author: dingyun
 
 * content
 {:toc}
+
+<p>音乐外链url</p>
 ## vim:神一样的编辑器 ~[如何使用插件](https://blog.csdn.net/qqstring/article/details/81511174)
 > Vim是一个类似于Vi的著名的功能强大、高度可定制的文本编辑器，在Vi的基础上改进和增加了很多特性。 [1]  VIM是自由软件。
 >
