@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "kafka的介绍以及和其它消息队列的区别"
-date:   2019年7月10日 10点51分
+date:   2019-07-01 10:11:11
 categories: kafka
 tags: kafka hadoop
 excerpt: 本文主要介绍了kafka的介绍以及和其它消息队列的区别
