@@ -4,6 +4,7 @@ title: Collections
 permalink: /collection/
 icon: bookmark
 type: page
+mathjax: true
 ---
 
 * content
@@ -289,7 +290,3 @@ Syntax Theme: Atom Dark or One Dark
 - [https://gyrosco.pe/](https://gyrosco.pe/)
 
     首页的卡片翻动效果非常赞。
-
-## Comments
-
-{% include comments.html %}
