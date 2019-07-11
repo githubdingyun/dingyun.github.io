@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "对excel进行操作的工具类"
+title:  "对json数据进行创建表，并且建立动态分区"
 date:   2019-07-08 12:12:12
 categories: excel util
 tags: excel util
-excerpt: 本文主要介绍了对excel进行简单操作的工具类以及常见使用方法
+excerpt: 对json数据进行创建表，并且建立动态分区
 mathjax: true
 author: dingyun
 ---
@@ -77,7 +77,7 @@ select * from api_trade_beijiajia;
 
 `hadoop dfs -cp /user/hive/warehouse/lsgdb.db/api_trade_beijiajia2/partition_day=1/testutf  /examples/lsg`
 
-###loda data 
+###loda data
 
 实际上是把text放到表下,解析实际是解析文本内容,而不是真正的查询sql
 load data inpath '/examples/lsg/testutf' overwrite into table `api_trade_beijiajia2`；
@@ -157,7 +157,7 @@ hadoop fs -chown -R root:root  /tmp
 ```mysql
 insert overwrite table `p_api_trade_beijiajia`
 PARTITION(payDay)
-select *, 
+select *,
 substring(payTime,0,10) as payDay
 from `api_trade_beijiajia`;
 
