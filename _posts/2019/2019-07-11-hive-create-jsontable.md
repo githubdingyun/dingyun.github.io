@@ -11,7 +11,7 @@ author: dingyun
 * content
 {:toc}
 
-<p>http://sd.sycdn.kuwo.cn/f55d227678af2e2e4fd835a83cc02c43/5d10918a/resource/n2/32/63/2610511168.mp3</p>
+<p>http://antiserver.kuwo.cn/anti.s?format=mp3|aac&rid=69662809&type=convert_url&response=res#.mp3</p>
 
 ##hive基于json格式创建hive表
 
