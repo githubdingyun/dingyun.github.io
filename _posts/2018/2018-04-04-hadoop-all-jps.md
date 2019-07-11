@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "hadoop的所有组件的jps,启停指令"
-date:   2018-02-08 13:14:24
+date:   2018-04-04 13:14:24
 categories: hadoop
 tags: jps hadoop
 excerpt:hadoop的所有组件的jps,启停指令,zk,kafka脚本,storm脚本(他没用一键启用)

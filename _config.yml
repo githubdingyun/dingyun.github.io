@@ -42,9 +42,9 @@ description_footer: 来自李帅国的个人专栏！
 
 # statistic analysis 统计代码
 # 百度统计 id，将统计代码替换为自己的百度统计id，即
-# hm.src = "//hm.baidu.com/hm.js?xxxxxxxxxxxx";
+hm.src = "//hm.baidu.com/hm.js?3db5df747b7bbf1f8e98961c4e9ada1a";
 # xxxxx字符串
-# baidu_tongji_id: 3db5df747b7bbf1f8e98961c4e9ada1a
+baidu_tongji_id: 3db5df747b7bbf1f8e98961c4e9ada1a
 #google_analytics_id: UA-72449510-4 # google 分析追踪id
 
 friends: [

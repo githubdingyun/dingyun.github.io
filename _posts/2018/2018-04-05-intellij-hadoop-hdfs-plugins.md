@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "HDFS and Yarn"
-date:   2018-3-3 15:14:54
+date:   2018-04-05 15:14:54
 categories: hadoop
 tags: hadoop hdfs
 mathjax: true

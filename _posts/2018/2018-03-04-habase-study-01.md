@@ -1,3 +1,13 @@
+---
+layout: post
+title:  "hbase集群安装以及zk安装"
+date:   2018-03-04 20:14:54
+categories: hbase  zk
+tags: hbase zk
+---
+* content
+{:toc}
+
 # habase：
 1. Hive和Hbase的区别；
 2. 系统的介绍HBase；
