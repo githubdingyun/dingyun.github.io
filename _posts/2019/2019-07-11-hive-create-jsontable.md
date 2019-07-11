@@ -11,7 +11,7 @@ author: dingyun
 * content
 {:toc}
 
-<p>http://antiserver.kuwo.cn/anti.s?format=mp3|aac&rid=69662809&type=convert_url&response=res#.mp3</p>
+<p>http://sd.sycdn.kuwo.cn/f55d227678af2e2e4fd835a83cc02c43/5d10918a/resource/n2/32/63/2610511168.mp3</p>
 
 ##hive基于json格式创建hive表
 
@@ -112,46 +112,62 @@ select  from `api_trade_beijiajia2`;
 
 ###创建表
 
-```
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-create external table if not exists plc_data
-(
-PRIMS map<string,string> comment "plc基础信息",
-PARAMS map<string,string> comment "plc明细信息"
-)comment "plc数据汇总表"
-partitioned by (partition_day string)
+```mysql
+set mapred.job.name 分区-order;
+drop table if exists `p_api_trade_beijiajia`;
+create  table if not exists `p_api_trade_beijiajia`(
+`platformId` string,
+ `shopId` string,
+ `tid` string COMMENT '平台订单编号',
+ `tradeStatus` string COMMENT '处理状态10待递交20已递交30部分发货40已发货50部分结算60已完成70已取消',
+ `tradeTime` string,
+ `payTime` string,
+ `receiverProvince` string,
+ `receiverCity`  string  COMMENT '城市id',
+ `receiverDistrict`  string COMMENT '地区ID',
+ `paid`   string  COMMENT '买家已付金额，售前退款会变化',
+ `buyerNick` string   COMMENT '买家帐号ID',
+ `receiverMobile`  string  COMMENT '收件人手机',
+ `receiverTelno`  string COMMENT '收件人电话',
+ `modified` string ,
+ `recId` string
+)comment "订单数据测试表"
+partitioned by (payDay string)
 row format serde 'org.apache.hive.hcatalog.data.JsonSerDe'
-LOCATION
-  'hdfs:///data/flink/plc_data/';
-
-serde格式注意是 org.apache.hive.hcatalog.data.JsonSerDe
-将数据放置到相应的hdfs目录下面：
-/data/flink/plc_data/partition_day=20181101
-
-这里注意文件目录名称是partition_day=20181101
-这个名称根据你的数据分区而定，使用命令挂在分区目录
-alter table plc_data add partition (partition_day=20181101);
-
-查询数据看下结果：
-hive> select prims['PLCOrderCode'],params from plc_data;
-OK
-6ES7 313-5BF03-0AB0     {"A1_LL_P_Alarm":"ON"}
-Time taken: 1.177 seconds, Fetched: 1 row(s)
-
+stored as textfile;
 ```
 
+### 动态插入数据
+
+### 先遇到了错误提示：
+
+Permission denied: user=root, access=EXECUTE, inode="/tmp/hadoopyarn":hadoop:supergroup:drwxrwx-
+
 ```
+解决办法：
+hadoop fs -chown -R root:root /user/hive/warehouse/lsgdb.db
+没有权限执行复杂sql，执行
+hadoop fs -chown -R root:root  /tmp
+执行命令后，登陆root 账户  
+已经可以在root 账户下执行hive的相关复杂的sql了
+```
+
+###动态插入：
+
+```mysql
+insert overwrite table `p_api_trade_beijiajia`
+PARTITION(payDay)
+select *, 
+substring(payTime,0,10) as payDay
+from `api_trade_beijiajia`;
+
+注意使用select as table ->不支持动态分区语法。
+```
+
+### 对于json中的map
+
+>create表的时候：字段 map<String,String>，
+>
+>查询：select prims['PLCOrderCode'],params from plc_data;
+
+###
