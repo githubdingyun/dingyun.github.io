@@ -57,13 +57,13 @@ author: dingyun
 ./hive
 ```
 
-### hiveserver2真正后台启动:
+### 3.hiveserver2真正后台启动:
 
 ```
 nohup ./hiveserver2 &
 ```
 
-#### nohop简介:
+#### 3.1nohop简介:
 
 nohup 是 no hang up 的缩写，就是不挂断的意思。
 
@@ -73,13 +73,13 @@ nohup 是 no hang up 的缩写，就是不挂断的意思。
 
 要想进程不受shell中Ctrl C和Shell窗口关闭的影响，就将nohup和&指令一起使用
 
-####nohup命令：
+#### 3.2nohup命令：
 
 如果你正在运行一个进程，而且你觉得在退出帐户时该进程还不会结束，那么可以使用nohup命令。该命令可以在你退出帐户/关闭终端之后继续运行相应的进程。
 
 在缺省情况下该作业的所有输出都被重定向到一个名为nohup.out的文件中。
 
-#### nohop案例
+#### 3.3nohop案例
 
 ```shell
 nohup command > myout.file 2>&1 &   
@@ -95,7 +95,7 @@ nohup command > myout.file 2>&1 &
 
 这是放在crontab中的定时任务，晚上22点时候怕这个任务，启动这个python的脚本，并把日志写在download_dfcf_pdf_to_oss.log文件中.
 
-### 3.hive客户端的使用
+### 4.hive客户端的使用
 
 客户端链接hievserver2的端口,可以多个客户端同时使用hive
 
@@ -107,7 +107,7 @@ nohup command > myout.file 2>&1 &
 
 也可以使用:jps -m 查看是否开启
 
-#### 使用beeline
+#### 4.1使用beeline
 
 * 执行命令开启客户端
 
@@ -121,9 +121,9 @@ nohup command > myout.file 2>&1 &
 
 每一个客户端相当于一个session,里面的参数设置,添加jar包都要执行,和其他客户端不冲突不关联
 
-#### 使用squirrel客户端
+#### 4.2使用squirrel客户端
 
-#####使用beeline很不方便,原因是:
+##### 4.2.1使用beeline很不方便,原因是:
 
 * 不能记录以前的sql
 * 写长sql很不方便
@@ -131,7 +131,7 @@ nohup command > myout.file 2>&1 &
 
 那么可以使用有图形化界面的squirrel:  [squirrel 的连接方式:官网](https://cwiki.apache.org/confluence/display/Hive)
 
-#####主要操作是:
+##### 4.2.2 主要操作是:
 
 1. 导入hadoop对应版本的hive jar包:可以在hivelib下面找
 2. 建立驱动和别名
