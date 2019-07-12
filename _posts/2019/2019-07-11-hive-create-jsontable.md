@@ -19,7 +19,10 @@ author: dingyun
 首先需要引入json的hive解析包。
 hive-hcatalog-core下载地址
 hive里是使用命令添加jar包
-add jar hdfs:////examples/lsg/hive-hcatalog-core-1.1.0-cdh5.13.3.jar;
+add jar hdfs:////examples/lsg/json-serde-1.3.7-jar-with-dependencies.jar;
+
+
+
 ###基于json的内容建表
 ```js
 单条json文本的内容
@@ -45,6 +48,8 @@ add jar hdfs:////examples/lsg/hive-hcatalog-core-1.1.0-cdh5.13.3.jar;
 ###hive建表语句:
 
 ```sql
+ java.lang.ClassNotFoundException: Class org.apache.hive.hcatalog.data.JsonSerDe not found
+
 --api_trade_beijiajia设计
 drop table if exists api_trade_beijiajia;
 create  table if not exists api_trade_beijiajia(
@@ -71,6 +76,7 @@ load data inpath '/examples/lsg/testutf' overwrite into table api_trade_beijiaji
 --partitione (partition_day);
 select * from api_trade_beijiajia;
 
+org.openx.data.jsonserde.JsonSerDe
 ```
 
 ###数据导入固定位置
@@ -106,7 +112,7 @@ select  from `api_trade_beijiajia2`;
 ```shell
 --SET hive.exec.dynamic.partition=true;    #开启动态分区，默认是false
 --SET hive.exec.dynamic.partition.mode=nonstrict;   #开启允许所有分区都是动态的，否则必须要有静态分区才能使用。
---SET hive.exec.max.dynamic.partitions.pernode = 1000;  
+--SET hive.exec.max.dynamic.partitions.pernode = 1000;    #开启 当日期超过3年的时候
 --SET hive.exec.max.dynamic.partitions=1000;
 ```
 
@@ -141,16 +147,35 @@ stored as textfile;
 
 ### 先遇到了错误提示：
 
-Permission denied: user=root, access=EXECUTE, inode="/tmp/hadoopyarn":hadoop:supergroup:drwxrwx-
+1.Permission denied: user=root, access=EXECUTE, inode="/tmp/hadoopyarn":hadoop:supergroup:drwxrwx-
 
 ```
 解决办法：
-hadoop fs -chown -R root:root /user/hive/warehouse/lsgdb.db
 没有权限执行复杂sql，执行
 hadoop fs -chown -R root:root  /tmp
 执行命令后，登陆root 账户  
 已经可以在root 账户下执行hive的相关复杂的sql了
 ```
+
+2.org.apache.hadoop.hive.ql.metadata.HiveException: java.lang.ClassNotFoundException: Class org.apache.hive.hcatalog.data.JsonSerDe not found
+
+```shell
+解决办法：
+缺少对应版本的 hive.hcatalog-core jar包，下载对应版本的jar包，
+下载2.3.4版本：https://www.mvnjar.com/org.apache.hive.hcatalog/hive-hcatalog-core/1.2.1/detail.html
+add jar hdfs:////examples/lsg/hive-hcatalog-core-2.3.4.jar
+add jar hdfs:////examples/lsg/hive-hcatalog-core-1.1.0-cdh5.13.3.jar
+```
+
+3.Caused by: org.apache.hadoop.hive.ql.metadata.HiveFatalException: [Error 20004]: Fatal error occurred when node tried to create too many dynamic partitions. The maximum number of dynamic partitions is controlled by hive.exec.max.dynamic.partitions and hive.exec.max.dynamic.partitions.pernode. Maximum was set to 100 partitions per node, number of dynamic partitions on this node: 101
+
+```shell
+--SET hive.exec.max.dynamic.partitions.pernode = 1000;    #开启 当日期超过3年的时候
+--SET hive.exec.max.dynamic.partitions=1000;
+因为按照日期分区会差不多1000，实验机器少
+```
+
+
 
 ###动态插入：
 
